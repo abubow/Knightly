@@ -15,7 +15,7 @@
 	];
 </script>
 
-<header class="navbar bg-base-100">
+<header class="navbar bg-slate-800 text-white">
 	<div class="navbar-start">
 		<div class="dropdown">
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
