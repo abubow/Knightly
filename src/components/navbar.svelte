@@ -1,22 +1,49 @@
 <script>
+	import Home from './icons/home.svelte';
+	import About from './icons/about.svelte';
+	import Contact from './icons/contact.svelte';
+	import Feed from './icons/feed.svelte';
+	import { onMount } from 'svelte';
 	let menu = [
 		{
 			label: 'Home',
+			icon: Home,
+			desktop: true,
 			href: '/'
 		},
 		{
-			label: 'About',
-			href: '/about'
+			label: 'people',
+			icon: About,
+			desktop: true,
+			href: '/people'
+		},
+		{
+			label: 'Posts',
+			icon: Feed,
+			desktop: true,
+			href: '/posts'
 		},
 		{
 			label: 'Contact',
+			icon: Contact,
+			desktop: false,
 			href: '/contact'
 		}
 	];
+	let activePage = 'Home';
+	onMount(() => {
+		let path = window.location.pathname;
+		for (let item of menu) {
+			if (item.href === path) {
+				activePage = item.label;
+				break;
+			}
+		}
+	});
 </script>
 
-<header class="navbar bg-slate-800 text-white">
-	<div class="navbar-start">
+<header class="navbar bg-slate-800/90 text-white shadow-lg z-50 sticky top-0 backdrop-blur-lg">
+	<nav class="navbar-start">
 		<div class="dropdown">
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 			<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -38,26 +65,45 @@
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 			<ul
 				tabindex="0"
-				class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+				class="menu menu-compact dropdown-content bg-slate-800/80 mt-3 p-2 shadow rounded-box w-52 backdrop-blur-xl"
 			>
 				{#each menu as item}
-					<li>
-						<a href={item.href} class="btn btn-ghost">{item.label}</a>
+					<li class="menu-item">
+						<a
+							href={item.href}
+							class={`btn btn-ghost grid grid-cols-2 ${
+								activePage === item.label ? 'text-slate-400' : ''
+							}`}
+						>
+							{#if item.icon}
+								<svelte:component this={item.icon} />
+							{/if}
+							{item.label}
+						</a>
 					</li>
 				{/each}
 			</ul>
 		</div>
 		<a class="btn btn-ghost normal-case text-xl" href="/">Knightly</a>
-	</div>
-	<div class="navbar-center hidden lg:flex">
+	</nav>
+	<nav class="navbar-center hidden lg:flex">
 		<ul class="menu menu-horizontal px-1">
 			{#each menu as item}
-				<li>
-					<a href={item.href} class="btn btn-ghost">{item.label}</a>
-				</li>
+				{#if item.desktop}
+					<li>
+						<a
+							href={item.href}
+							class={`btn btn-ghost ${activePage === item.label ? 'text-slate-400' : ''}`}
+						>
+							{#if item.icon}
+								<svelte:component this={item.icon} />
+							{/if}
+						</a>
+					</li>
+				{/if}
 			{/each}
 		</ul>
-	</div>
+	</nav>
 	<div class="navbar-end">
 		<a class="btn" href="/login">Login</a>
 	</div>
