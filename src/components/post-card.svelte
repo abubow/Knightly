@@ -7,35 +7,46 @@
 	let currentTime = new Date().getTime();
 	let timePassed: number;
 	if (typeof createdAt === 'string') {
-		timePassed = currentTime - new Date(createdAt).getTime();
+		if (updatedAt !== createdAt) {
+			timePassed = currentTime - new Date(updatedAt).getTime();
+		} else timePassed = currentTime - new Date(createdAt).getTime();
 	}
 </script>
 
-<section class="card bg-slate-700 text-primary-content m-2 min-w-1/2 lg:min-w-1/3">
+<section class="card bg-slate-700 text-slate-300 m-2 min-w-1/2 lg:min-w-1/3 shadow-lg">
 	<header class="card-body grid grid-cols-10">
-		<div class="flex flex-col items-center">
-			<img
-				src="https://placehold.co/100x100"
-				class="rounded-full w-10 h-10"
-				width="50"
-				height="50"
-				alt="avatar"
-			/>
+		<div class="avatar online col-span-1 w-10 h-10">
+			<span class="rounded-full w-10 h-10 shadow-2xl">
+				<img
+					src="https://placehold.co/100x100"
+					class="rounded-full w-10 h-10"
+					width="50"
+					height="50"
+					alt="avatar"
+				/>
+			</span>
 			<p class="text-xs">{username}</p>
 		</div>
-		<h3 class="card-title col-span-9">
-			{title}
+		<h3 class="col-span-9 grid grid-rows-2">
+			<span class="card-title">
+				{title}
+			</span>
 		</h3>
 	</header>
 	<div class="divider m-0" />
 	<article class="card-body">
-		<span class="badge badge-accent text-xs">
-			{timePassed > 86400000
-				? new Date(createdAt).toLocaleDateString()
-				: new Date(createdAt).toLocaleTimeString()}
-		</span>
 		<span aria-label="content" class="text-sm">
-			{body.length > 100 ? body.slice(0, 100) + '...' : body}
+			<span class="badge badge-info shadow-2xl text-xs opacity-90 backdrop-blur-3xl">
+				{updatedAt !== createdAt
+					? 'Updated ' +
+					  (timePassed > 86400000
+							? new Date(updatedAt).toLocaleDateString()
+							: new Date(updatedAt).toLocaleTimeString())
+					: timePassed > 86400000
+					? new Date(createdAt).toLocaleDateString()
+					: new Date(createdAt).toLocaleTimeString()}
+			</span>
+			{body.length > 350 ? body.slice(0, 350) + '...' : body}
 		</span>
 	</article>
 </section>

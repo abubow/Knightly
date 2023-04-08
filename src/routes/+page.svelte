@@ -2,7 +2,9 @@
 	import Navbar from '../components/navbar.svelte';
 </script>
 
-<Navbar />
+<section class="min-w-full col-span-4 lg:col-span-2 lg:col-start-2 items-center justify-end flex">
+	<main class="bg-slate-800 gap-8 grid grid-cols-4 min-h-screen min-w-screen py-12 p-2">
+		
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+	</main>
+</section>

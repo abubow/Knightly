@@ -6,18 +6,18 @@
 	let loading = false;
 	let success = false;
 	let valid = false;
-	let token = '';
-
 	$: valid = email !== '' && password !== '';
+
+	let token = '';
 
 	function submit(e: Event) {
 		e.preventDefault();
 		if (valid) {
 			loading = true;
-			fetch('/api/login', {
+			fetch('http://localhost:8800/login', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
 					email,
@@ -29,17 +29,22 @@
 					if (data.error) {
 						error = data.error;
 					} else {
-						success = true;
 						token = data.token;
+						success = true;
 					}
+					loading = false;
+				})
+				.catch((err) => {
+					console.log(err);
 					loading = false;
 				});
 		}
 	}
 
-	// store the token in cookies so that it can be accessed by the server
+	// if success, redirect to home page
 	$: if (success) {
-		// document.cookie = `token=${token}`;
+		document.cookie = `token=${token}; path=/;`;
+		window.location.href = '/';
 	}
 </script>
 
@@ -58,7 +63,7 @@
 					type="email"
 					name="email"
 					id="email"
-					class="input input-bordered input-sm w-full max-w-xs"
+					class="input input-bordered input-sm w-full max-w-xs text-primary-500"
 					placeholder="Email"
 				/>
 				<label for="password" class="label">

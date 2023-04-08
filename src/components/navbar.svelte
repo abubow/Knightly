@@ -31,6 +31,8 @@
 		}
 	];
 	let activePage = 'Home';
+	let loggedIn = false;
+	let csrfToken = '';
 	onMount(() => {
 		let path = window.location.pathname;
 		for (let item of menu) {
@@ -39,7 +41,36 @@
 				break;
 			}
 		}
+		// if logged in (csrf token exists), set loggedIn to true
+		document.cookie.split(';').forEach((cookie) => {
+			if (cookie.includes('token')) {
+				loggedIn = true;
+				csrfToken = cookie.split('=')[1];
+			}
+			console.log(cookie)
+		});
 	});
+
+	// if logged in, attempt to validate token
+	$: if (loggedIn) {
+		fetch('http://localhost:8800/validate', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ token: csrfToken }),
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.error) {
+					loggedIn = false;
+					console.log(data);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}
 </script>
 
 <header class="navbar bg-slate-800/90 text-white shadow-lg z-50 sticky top-0 backdrop-blur-lg">
@@ -105,6 +136,10 @@
 		</ul>
 	</nav>
 	<div class="navbar-end">
-		<a class="btn" href="/login">Login</a>
+		{#if loggedIn}
+			<a class="btn" href="/logout">Logout</a>
+		{:else}
+			<a class="btn" href="/login">Login</a>
+		{/if}
 	</div>
 </header>
