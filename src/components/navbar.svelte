@@ -47,29 +47,29 @@
 				loggedIn = true;
 				csrfToken = cookie.split('=')[1];
 			}
-			console.log(cookie)
+			console.log('cookie', cookie);
 		});
 	});
 
-	// if logged in, attempt to validate token
+	// add token to cookie
 	$: if (loggedIn) {
-		fetch('http://localhost:8800/validate', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ token: csrfToken }),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				if (data.error) {
-					loggedIn = false;
-					console.log(data);
-				}
+		if (csrfToken !== '') {
+			fetch('http://localhost:8800/validate', {
+				method: 'POST',
+				credentials: 'same-origin',
+				body: JSON.stringify({ token: csrfToken })
 			})
-			.catch((err) => {
-				console.log(err);
-			});
+				.then((res) => res.json())
+				.then((data) => {
+					if (data.error) {
+						loggedIn = false;
+					}
+					console.log(data);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		}
 	}
 </script>
 

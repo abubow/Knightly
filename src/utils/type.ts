@@ -1,12 +1,9 @@
-interface User {
+export interface User {
 	id: number;
 	username: string;
 	email: string;
-	password: string;
 	profile_image?: string;
-	followers: User[];
-	followings: User[];
-	posts: Post[];
+	posts?: Post[];
 }
 
 export interface Post {

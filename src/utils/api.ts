@@ -36,3 +36,7 @@ export async function getPosts() {
 export async function getPost(id: string) {
 	return get(`/posts/${id}`);
 }
+
+export async function getAllUsers() {
+	return get('/users');
+}
